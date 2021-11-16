@@ -22,6 +22,7 @@ def ExchangeSort(nums):
     print("     -> " + str(nums))
     return nums
 
+
 ########## Insert Sort ##########
 def InsertSort(nums):
     print("Insert Sort on: \n\t" + str(nums))
@@ -34,6 +35,7 @@ def InsertSort(nums):
         nums[j+1] = key
     print("     -> " + str(nums))
     return nums
+
 
 ########## Binary Insert Sort ##########
 def BinarySearch(nums, val, start, end):
@@ -63,6 +65,7 @@ def BinaryInsertSort(nums):
     print("     -> " + str(nums))
     return nums
 
+
 ########## Selection Sort ##########
 def SelectionSort(nums):
     print("Selection Sort on: \n\t" + str(nums))
@@ -74,6 +77,7 @@ def SelectionSort(nums):
         nums[i], nums[idx] = nums[idx], nums[i]
     print("     -> " + str(nums))
     return nums
+
 
 ########## Merge Sort ##########
 # def MergeSort(n, nums):
@@ -96,34 +100,140 @@ def SelectionSort(nums):
 #     while i < mid and j < high:
 #         if num
 
+
 ########## Merge Sort 4 (Linked List) ##########
+# def MergeSort4(low, high, mergedlist):
+#     list1, list2, mid = 0,0,0
+#     if low == high:
+#         mergedlist = low
+#         nums[mergedlist].link = 0
+#     else:
+#         mid = (low + high) / 2
+#         MergeSort4(low, mid, list1)
+#         MergeSort4(mid + 1, high, list2)
+#         Merge4(list1, list2, mergedlist)
+
+# def Merge4(list1, list2, mergedlist):
+#     lastsorted = 0
+#     if nums[list1].key < nums[list2].key:
+#         mergedlist = list1
+#         list1 = nums[list1].link
+#     else:
+#         mergedlist = list2
+#         list2 = nums[list2].link
+#     lastsorted = mergedlist
+#     while list1 != 0 and list2 != 0:
+#         if nums[list1].key < nums[list2].key:
+#             nums[lastsorted].link = list1
+#             lastsorted = list1
+#             list1 = nums[list1].link
+#         else:
+#             nums[lastsorted].link = list2
+#             lastsorted = list2
+#             list2 = nums[list2].link
+#     if list1 == 0:
+#         nums[lastsorted].link = list2
+#     else:
+#         nums[lastsorted].link = list1
+
 
 ########## Quick Sort ##########
+# def QuickSort(low, high, nums):
+#     pivot = 0
+#     if high > low:
+#         partition(low, high, pivot, nums)
+#         QuickSort(low, pivot - 1, nums)
+#         QuickSort(pivot + 1, high, nums)
+
+# def partition(low, high, pivotpoint, nums):
+#     pivotitem = nums[low]
+#     j = low
+#     for i in range(low + 1, high):
+#         if nums[i] < pivotitem:
+#             j += 1
+#             temp = nums[i]
+#             nums[i] = nums[j]
+#             nums[j] = temp
+#     pivotpoint = j
+#     temp = nums[low]
+#     nums[low] = nums[pivotpoint]
+#     nums[pivotpoint] = temp
+
 
 ########## Quick Sort (using partition) ##########
-def QuickSortPartition(low, high, nums):
-    pivot = 0
-    if high > low:
-        partition(low, high, pivot, nums)
-        QuickSortPartition(low, pivot - 1, nums)
-        QuickSortPartition(pivot + 1, high, nums)
+# def QuickSortPartition()
+# either on page 467 or 413
 
-def partition(low, high, pivotpoint, nums):
-    pivotitem = nums[low]
-    j = low
-    for i in range(low + 1, high):
-        if nums[i] < pivotitem:
-            j += 1
-            temp = nums[i]
-            nums[i] = nums[j]
-            nums[j] = temp
-    pivotpoint = j
-    temp = nums[low]
-    nums[low] = nums[pivotpoint]
-    nums[pivotpoint] = temp
+
 ########## Heap Sort ##########
+# class heap:
+#     arr = []
+#     heapsize = int
+
+# def siftdown(heap, idx):
+#     largerchild = 0
+#     siftkey = heap.arr[idx]
+#     parent = idx
+#     spotfound = False
+#     while 2 * parent <= heap.heapsize and not spotfound:
+#         if 2 * parent < heap.heapsize and heap.arr[2 * parent] < heap.arr[2 * parent + 1]:
+#             largerchild = 2 * parent + 1
+#         else:
+#             largerchild = 2 * parent
+#         if siftkey < heap.arr[largerchild]:
+#             heap.arr[parent] = heap.arr[largerchild]
+#             parent = largerchild
+#         else:
+#             spotfound = True
+#     heap.arr[parent] = siftkey
+
+# def root(heap):
+#     keyout = heap.arr[1]
+#     heap.arr[1] = heap.arr[heap.heapsize]
+#     heap.heapsize -= 1
+#     siftdown(heap, 1)
+#     return keyout
+
+# def removekeys(n, heap, arr):
+#     for i in range(n, 0, -1):
+#         arr[i] = root(heap)
+
+# def makeheap(n, heap):
+#     heap.heapsize = n
+#     for i in range(0, n/2, -1):
+#         siftdown(heap, i)
+
+# def HeapSort(n, heap):
+#     makeheap(n, heap)
+#     removekeys(n, heap, heap.arr)
+
 
 ########## Radix Sort ##########
+# class nodetype:
+#     keytype key
+#     nodetype* link
+
+# typedef nodetype* nodepointer
+
+# def RadixSort(masterList, numdigits):
+#     for i in range(numdigits):
+#         distribute(masterList, i)
+#         coalesce(masterList)
+
+# def distribute(masterList, idx):
+#     for j in range(9):
+#         list[j] = None
+#     p  = masterList
+#     while p != None:
+#         j = value of the ith digit (from the right) in p -> key
+#         link p to the end of the list[j]
+#         p = p -> link
+
+# def coalesce(masterList):
+#     masterList = None
+#     for j in range(9):
+#         link the nodes in list[j] to the end of the masterList
+
 
 ########## Execution ##########
 
@@ -132,6 +242,3 @@ def partition(low, high, pivotpoint, nums):
 #BinaryInsertSort(size10)
 #SelectionSort(size10)
 
-print(size10)
-QuickSortPartition(0, len(size10) - 1, size10 )
-print(size10)
