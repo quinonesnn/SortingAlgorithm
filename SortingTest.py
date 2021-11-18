@@ -8,8 +8,6 @@ size1000 = np.random.randint(1000, size=1000)
 size10000 = np.random.randint(10000, size=10000)
 size100000 = np.random.randint(100000, size=100000)
 
-print(size10)
-
 ########## Exchange Sort ##########
 def ExchangeSort(nums):
     print("Exchange Sort on: \n\t" + str(nums))
@@ -235,7 +233,41 @@ def SelectionSort(nums):
 #         link the nodes in list[j] to the end of the masterList
 
 
+########## Helper Functions ##########
+
+# Logs time in miliseconds before and after the algorithm runs
+def getTime(function, arr):
+    start = datetime.now()
+    function(arr)
+    end = datetime.now()
+    return str(end - start)[5:]
+
+# Runs the chosen algorithm for a specified amount of times
+# Stores then returns the average time
+def getAvg(function, size):
+    time = []
+    for i in range(1, size + 1):
+        size = np.random.randint(100, size)
+        time.append(float(getTime(function, size)))
+    return np.average(time)
+
+# Chooses algorithm, runs them testcase[i] amount of times
+# returns the avg taken for each size
+def runTests(function):
+    tests = {100: 0.0, 1000:0.0, 10000:0.0, 100000:0.0}
+    for size in tests.keys():
+        tests[size] = getAvg(function, size)
+    return tests
+        
+
+
+
 ########## Execution ##########
+
+#print(getTime(ExchangeSort, size10))
+
+# print(runTests(ExchangeSort))
+print(getAvg(ExchangeSort, 1000))
 
 #ExchangeSort(size10)
 #InsertSort(size10)
