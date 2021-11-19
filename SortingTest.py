@@ -1,8 +1,8 @@
 from datetime import datetime
 import numpy as np
+from numpy.core.fromnumeric import _mean_dispatcher
 
 ########## Initialization ##########
-size10 = np.random.randint(10, size=10)
 size100 = np.random.randint(100, size=100)
 size1000 = np.random.randint(1000, size=1000)
 size10000 = np.random.randint(10000, size=10000)
@@ -10,14 +10,12 @@ size100000 = np.random.randint(100000, size=100000)
 
 ########## Exchange Sort ##########
 def ExchangeSort(nums):
-    print("Exchange Sort on: \n\t" + str(nums))
     for i in range(len(nums)):
         for j in range(len(nums)):
             if nums[i] < nums[j]:
                 temp = nums[i]
                 nums[i] = nums[j]
                 nums[j] = temp
-    print("     -> " + str(nums))
     return nums
 
 
@@ -31,7 +29,6 @@ def InsertSort(nums):
                 nums[j+1] = nums[j]
                 j -= 1
         nums[j+1] = key
-    print("     -> " + str(nums))
     return nums
 
 
@@ -244,21 +241,32 @@ def getTime(function, arr):
 
 # Runs the chosen algorithm for a specified amount of times
 # Stores then returns the average time
-def getAvg(function, size):
+def getAvg(function, arrSize):
     time = []
-    for i in range(1, size + 1):
-        size = np.random.randint(100, size)
-        time.append(float(getTime(function, size)))
-    return np.average(time)
+    for i in range(1, arrSize + 1):
+        randomArr = np.random.randint(10, size=arrSize)
+        time.append(float(getTime(function, randomArr)))
+    return '{:f}'.format(np.mean(time))
+
 
 # Chooses algorithm, runs them testcase[i] amount of times
 # returns the avg taken for each size
 def runTests(function):
-    tests = {100: 0.0, 1000:0.0, 10000:0.0, 100000:0.0}
+    # test on array of size 10 and printing the results
+    size10 = np.random.randint(10, size=10)
+    print(str(function).split()[1] + " on: \n\t" + str(size10))
+    results = function(size10)
+    print("     -> " + str(results))
+
+    # tests = {100: 0.0, 1000:0.0, 10000:0.0, 100000:0.0}
+    tests = {10: 0.0, 50: 0.0, 100:0.0}
     for size in tests.keys():
         tests[size] = getAvg(function, size)
+
+    for key, value in tests.items():
+        print("Array size {}    -> {} seconds".format(key, value))
+
     return tests
-        
 
 
 
@@ -267,7 +275,7 @@ def runTests(function):
 #print(getTime(ExchangeSort, size10))
 
 # print(runTests(ExchangeSort))
-print(getAvg(ExchangeSort, 1000))
+runTests(ExchangeSort)
 
 #ExchangeSort(size10)
 #InsertSort(size10)
