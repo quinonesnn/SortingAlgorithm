@@ -1,6 +1,7 @@
 from datetime import datetime
 import numpy as np
 from numpy.core.fromnumeric import _mean_dispatcher
+from numpy.lib.function_base import average
 
 ########## Initialization ##########
 size100 = np.random.randint(100, size=100)
@@ -239,46 +240,28 @@ def getTime(function, arr):
     end = datetime.now()
     return str(end - start)[5:]
 
-# Runs the chosen algorithm for a specified amount of times
-# Stores then returns the average time
-def getAvg(function, arrSize):
-    time = []
-    for i in range(1, arrSize + 1):
-        randomArr = np.random.randint(10, size=arrSize)
-        time.append(float(getTime(function, randomArr)))
-    return '{:f}'.format(np.mean(time))
+def getAvg(function, arrSize, numOfTests):
+    times = []
+    testArray = np.random.randint(arrSize, size=arrSize)
+    for i in range(numOfTests):
+        times.append(float(getTime(function, testArray)))
+    return '{:f}'.format(np.mean(times))
 
-
-# Chooses algorithm, runs them testcase[i] amount of times
-# returns the avg taken for each size
-def runTests(function):
-    # test on array of size 10 and printing the results
+def runTests(function, numOfTests):
+    print("___________________________________________")
+    algorithm = str(function).split()[1]
+    # test on random array of size 10 and printing the results
     size10 = np.random.randint(10, size=10)
-    print(str(function).split()[1] + " on: \n\t" + str(size10))
+    print(algorithm + " on array of size 10: \n\t" + str(size10))
     results = function(size10)
     print("     -> " + str(results))
-
-    # tests = {100: 0.0, 1000:0.0, 10000:0.0, 100000:0.0}
-    tests = {10: 0.0, 50: 0.0, 100:0.0}
-    for size in tests.keys():
-        tests[size] = getAvg(function, size)
-
-    for key, value in tests.items():
-        print("Array size {}    -> {} seconds".format(key, value))
-
-    return tests
-
-
+    #sizes = [100, 1000, 10000, 100000]
+    sizes = [5, 10, 25, 50]
+    print("Average run times for " + algorithm + " on arrays of size:")
+    for size in sizes:
+        print(" " + str(size) + " -> " + getAvg(function, size, numOfTests) + " seconds")
+    print("___________________________________________")
 
 ########## Execution ##########
 
-#print(getTime(ExchangeSort, size10))
-
-# print(runTests(ExchangeSort))
-runTests(ExchangeSort)
-
-#ExchangeSort(size10)
-#InsertSort(size10)
-#BinaryInsertSort(size10)
-#SelectionSort(size10)
-
+runTests(ExchangeSort, 50)
