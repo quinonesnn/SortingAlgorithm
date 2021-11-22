@@ -2,6 +2,8 @@ from datetime import datetime
 import numpy as np
 from numpy.core.fromnumeric import _mean_dispatcher
 from numpy.lib.function_base import average
+from numpy.ma.core import MaskError
+from numpy.testing._private.utils import tempdir
 
 ########## Initialization ##########
 size100 = np.random.randint(100, size=100)
@@ -22,7 +24,6 @@ def ExchangeSort(nums):
 
 ########## Insert Sort ##########
 def InsertSort(nums):
-    print("Insert Sort on: \n\t" + str(nums))
     for i in range(1, len(nums)):
         key = nums[i]
         j = i-1
@@ -34,57 +35,60 @@ def InsertSort(nums):
 
 
 ########## Binary Insert Sort ##########
-def BinarySearch(nums, val, start, end):
-    if start == end:
-        if nums[start] > val:
-            return start
-        else:
-            return start+1
-
-    if start > end:
-        return start
-  
-    mid = (start+end)/2
-    if nums[mid] < val:
-        return BinarySearch(nums, val, mid+1, end)
-    elif nums[mid] > val:
-        return BinarySearch(nums, val, start, mid-1)
-    else:
-        return mid
   
 def BinaryInsertSort(nums):
-    print("Binary Insert Sort on: \n\t" + str(nums))
     for i in range(1, len(nums)):
-        val = nums[i]
-        j = BinarySearch(nums, val, 0, i-1)
-        nums = nums[:j] + [val] + nums[j:i] + nums[i+1:]
-    print("     -> " + str(nums))
+        temp = nums[i]
+        j = BinarySearch(nums, temp, 0, i-1)
+        for k in range(i, j, -1):
+            nums[k] = nums[k-1]
+        nums[j] = temp
     return nums
 
+def BinarySearch(nums, val, start, end):
+    if end - start <= 1:
+        if val < nums[start]:
+            return start - 1
+        else:
+            return start
+    mid = (start + end)//2
+    if nums[mid] <  val:
+        return BinarySearch(nums, val, mid, end)
+    elif nums[mid] > val:
+        return BinarySearch(nums, val, start, mid)
+    else:
+        return mid
 
 ########## Selection Sort ##########
 def SelectionSort(nums):
-    print("Selection Sort on: \n\t" + str(nums))
-    for i in range(len(nums)):
+    for i in range(1, len(nums)):
         idx = i
         for j in range(i + 1, len(nums)):
             if nums[idx] > nums[j]:
                 idx = j
         nums[i], nums[idx] = nums[idx], nums[i]
-    print("     -> " + str(nums))
     return nums
 
 
 ########## Merge Sort ##########
-# def MergeSort(n, nums):
-#     if n > 1:
-#         h = (n/2)
-#         m = n - h
+# def MergeSort(nums):
+#     if len(nums) > 1:
+#         mid = len(nums)//2
+#         left = nums[:mid]
+#         right = nums[mid:]
+#         MergeSort(left)
+#         MergeSort(right)
+#         Merge(nums, left, right, mid)
 
+# def Merge(nums, left, right, mid):
+#     i,j,k = 1,1,1
+#     while i <= len(left) and j <= mid:
+#         if
 
 ########## Merge Sort 2 ##########
-# def MergeSort2(low, high):
-#     mid = 0
+# def MergeSort2(nums):
+#     low, mid = 0, 0
+#     high = len(nums)
 #     if low < high:
 #         mid = (low + high) / 2
 #         MergeSort2(low, mid)
@@ -248,7 +252,7 @@ def getAvg(function, arrSize, numOfTests):
     return '{:f}'.format(np.mean(times))
 
 def runTests(function, numOfTests):
-    print("___________________________________________")
+    print("\n___________________________________________")
     algorithm = str(function).split()[1]
     # test on random array of size 10 and printing the results
     size10 = np.random.randint(10, size=10)
@@ -260,8 +264,11 @@ def runTests(function, numOfTests):
     print("Average run times for " + algorithm + " on arrays of size:")
     for size in sizes:
         print(" " + str(size) + " -> " + getAvg(function, size, numOfTests) + " seconds")
-    print("___________________________________________")
+    print("___________________________________________\n")
 
 ########## Execution ##########
 
-runTests(ExchangeSort, 50)
+# runTests(ExchangeSort, 50)
+# runTests(InsertSort, 50)
+# runTests(BinaryInsertSort, 50)
+# runTests(SelectionSort, 50)
