@@ -1,9 +1,5 @@
 from datetime import datetime
 import numpy as np
-from numpy.core.fromnumeric import _mean_dispatcher
-from numpy.lib.function_base import average
-from numpy.ma.core import MaskError
-from numpy.testing._private.utils import tempdir
 
 ########## Initialization ##########
 size100 = np.random.randint(100, size=100)
@@ -138,26 +134,35 @@ def SelectionSort(nums):
 
 
 ########## Quick Sort ##########
-# def QuickSort(low, high, nums):
-#     pivot = 0
-#     if high > low:
-#         partition(low, high, pivot, nums)
-#         QuickSort(low, pivot - 1, nums)
-#         QuickSort(pivot + 1, high, nums)
+# Made this function only take the array to make it cleaner with the helper functions
+def QuickSort(nums):
+    low = 0
+    high = len(nums) - 1
+    if len(nums) == 1:
+        return nums
+    if high > low:
+        pivot = partition(low, high, nums)
+        QuickSort(low, high, nums)
+        QuickSort(pivot +1, high, nums)
 
-# def partition(low, high, pivotpoint, nums):
-#     pivotitem = nums[low]
-#     j = low
-#     for i in range(low + 1, high):
-#         if nums[i] < pivotitem:
-#             j += 1
-#             temp = nums[i]
-#             nums[i] = nums[j]
-#             nums[j] = temp
-#     pivotpoint = j
-#     temp = nums[low]
-#     nums[low] = nums[pivotpoint]
-#     nums[pivotpoint] = temp
+def QuickSort(low, high, nums):
+    if len(nums) == 1:
+        return nums
+    if high < low:
+        pivot = partition(low, high, nums)
+        QuickSort(low, pivot - 1, nums)
+        QuickSort(pivot + 1, high, nums)
+
+
+def partition(low, high, nums):
+    i = (low - 1)
+    pivot = nums[high]
+    for j in range(low, high):
+        if nums[j] <= pivot:
+            i += 1
+            nums[i], nums[j] = nums[j], nums[i]
+    nums[low + 1], nums[high] = nums[high], nums[i + 1]
+    return i+1
 
 
 ########## Quick Sort (using partition) ##########
@@ -272,3 +277,4 @@ def runTests(function, numOfTests):
 # runTests(InsertSort, 50)
 # runTests(BinaryInsertSort, 50)
 # runTests(SelectionSort, 50)
+runTests(QuickSort, 50)
