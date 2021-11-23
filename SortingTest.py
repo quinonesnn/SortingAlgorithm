@@ -2,6 +2,7 @@ from datetime import datetime
 import numpy as np
 
 ########## Initialization ##########
+array = np.random.randint(10, size=10)
 size100 = np.random.randint(100, size=100)
 size1000 = np.random.randint(1000, size=1000)
 size10000 = np.random.randint(10000, size=10000)
@@ -41,15 +42,15 @@ def BinaryInsertSort(nums):
         nums[j] = temp
     return nums
 
-def BinarySearch(nums, val, start, end):
-    if end - start <= 1:
+def BinarySearch(nums, val, start, high):
+    if high - start <= 1:
         if val < nums[start]:
             return start - 1
         else:
             return start
-    mid = (start + end)//2
+    mid = (start + high)//2
     if nums[mid] <  val:
-        return BinarySearch(nums, val, mid, end)
+        return BinarySearch(nums, val, mid, high)
     elif nums[mid] > val:
         return BinarySearch(nums, val, start, mid)
     else:
@@ -67,19 +68,45 @@ def SelectionSort(nums):
 
 
 ########## Merge Sort ##########
-# def MergeSort(nums):
-#     if len(nums) > 1:
-#         mid = len(nums)//2
-#         left = nums[:mid]
-#         right = nums[mid:]
-#         MergeSort(left)
-#         MergeSort(right)
-#         Merge(nums, left, right, mid)
+def MergeSort(nums):
+    left = 0
+    right = len(nums) - 1
+    def recMergeSort(nums , left, right):
+        if left < right:
+            mid = left+(right-left)//2
+            recMergeSort(nums, left, mid)
+            recMergeSort(nums, mid + 1, right)
+            Merge(nums, left, mid, right)
+            return nums
+    return recMergeSort(nums, left, right)
 
-# def Merge(nums, left, right, mid):
-#     i,j,k = 1,1,1
-#     while i <= len(left) and j <= mid:
-#         if
+def Merge(nums, left, mid, right):
+    n1 = mid - left + 1
+    n2 = right - mid
+    L = [0] * (n1)
+    R = [0] * (n2)
+    for i in range(0, n1):
+        L[i] = nums[left + i]
+    for j in range(0, n2):
+        R[j] = nums[mid + 1 + j]
+    i, j = 0, 0
+    k = left
+    while i < n1 and j < n2:
+        if L[i] <= R[j]:
+            nums[k] = L[i]
+            i += 1
+        else:
+            nums[k] = R[j]
+            j += 1
+        k += 1
+    while i < n1:
+        nums[k] = L[i]
+        i += 1
+        k += 1
+    while j < n2:
+        nums[k] = R[j]
+        j += 1
+        k += 1
 
 ########## Merge Sort 2 ##########
 # def MergeSort2(nums):
@@ -138,35 +165,64 @@ def SelectionSort(nums):
 def QuickSort(nums):
     low = 0
     high = len(nums) - 1
-    if len(nums) == 1:
-        return nums
-    if high > low:
-        pivot = partition(low, high, nums)
-        QuickSort(low, high, nums)
-        QuickSort(pivot +1, high, nums)
-
-def QuickSort(low, high, nums):
-    if len(nums) == 1:
-        return nums
-    if high < low:
-        pivot = partition(low, high, nums)
-        QuickSort(low, pivot - 1, nums)
-        QuickSort(pivot + 1, high, nums)
-
-
-def partition(low, high, nums):
-    i = (low - 1)
-    pivot = nums[high]
-    for j in range(low, high):
-        if nums[j] <= pivot:
-            i += 1
-            nums[i], nums[j] = nums[j], nums[i]
-    nums[low + 1], nums[high] = nums[high], nums[i + 1]
-    return i+1
-
+    # Recursive step
+    def recQuickSort(nums, low, high):
+        if low >= high:
+            return
+        pivot = partition(nums, low, high)
+        recQuickSort(nums, low, pivot-1)
+        recQuickSort(nums, pivot+1, high)
+    recQuickSort(nums, low, high)
+    return nums
+        
+def partition(nums, low, high):
+    pivot = low
+    for i in range(low+1, high+1):
+        if nums[i] <= nums[low]:
+            pivot += 1
+            nums[i], nums[pivot] = nums[pivot], nums[i]
+    nums[pivot], nums[low] = nums[low], nums[pivot]
+    return pivot
 
 ########## Quick Sort (using partition) ##########
-# def QuickSortPartition()
+# def QuickSort2(nums):
+#     low = 0
+#     high = len(nums) - 1
+#     # Recursive step
+#     def recQuickSort2(nums, low, high):
+#         if low >= high:
+#             return
+#         pivot = partition2(nums, low, high)
+#         recQuickSort2(nums, low, pivot-1)
+#         recQuickSort2(nums, pivot+1, high)
+#     recQuickSort2(nums, low, high)
+#     return nums
+
+# def partition2(nums, low, high):
+#     pivot = nums[low]
+#     i = low
+#     j = high + 1
+#     while True:
+#         i += 1
+#         if i < high and nums[i] <= pivot:
+#             break
+#     while True:
+#         j -= 1
+#         if nums[j] > pivot:
+#             break
+#     while i < j:
+#         nums[i], nums[j] = nums[j], nums[i]
+#         while True:
+#             i += 1
+#             if nums[i] <= pivot:
+#                 break
+#         while True:
+#             j -= 1
+#             if nums[j] > pivot:
+#                 break
+#     pivot = j
+#     nums[low], nums[pivot] = nums[pivot] , nums[low]
+#     return pivot
 # either on page 467 or 413
 
 
@@ -231,13 +287,13 @@ def partition(low, high, nums):
 #     p  = masterList
 #     while p != None:
 #         j = value of the ith digit (from the right) in p -> key
-#         link p to the end of the list[j]
+#         link p to the high of the list[j]
 #         p = p -> link
 
 # def coalesce(masterList):
 #     masterList = None
 #     for j in range(9):
-#         link the nodes in list[j] to the end of the masterList
+#         link the nodes in list[j] to the high of the masterList
 
 
 ########## Helper Functions ##########
@@ -246,8 +302,8 @@ def partition(low, high, nums):
 def getTime(function, arr):
     start = datetime.now()
     function(arr)
-    end = datetime.now()
-    return str(end - start)[5:]
+    high = datetime.now()
+    return str(high - start)[5:]
 
 def getAvg(function, arrSize, numOfTests):
     times = []
@@ -266,6 +322,7 @@ def runTests(function, numOfTests):
     print("     -> " + str(results))
     #sizes = [100, 1000, 10000, 100000]
     sizes = [5, 10, 25, 50]
+    #sizes = [1]
     print("Average run times for " + algorithm + " on arrays of size:")
     for size in sizes:
         print(" " + str(size) + " -> " + getAvg(function, size, numOfTests) + " seconds")
@@ -273,8 +330,11 @@ def runTests(function, numOfTests):
 
 ########## Execution ##########
 
+# runtests(Name of Algorithm, Amount of times to be tested)
 # runTests(ExchangeSort, 50)
 # runTests(InsertSort, 50)
 # runTests(BinaryInsertSort, 50)
 # runTests(SelectionSort, 50)
-runTests(QuickSort, 50)
+runTests(MergeSort, 50)
+# runTests(QuickSort, 50)
+# runTests(QuickSort2, 50)
