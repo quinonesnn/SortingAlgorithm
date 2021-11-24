@@ -58,55 +58,37 @@ def BinarySearch(nums, val, start, high):
 
 ########## Selection Sort ##########
 def SelectionSort(nums):
-    for i in range(1, len(nums)):
-        idx = i
-        for j in range(i + 1, len(nums)):
-            if nums[idx] > nums[j]:
-                idx = j
-        nums[i], nums[idx] = nums[idx], nums[i]
+    size =  len(nums)
+    for step in range(size):
+        min_idx = step
+        for i in range(step + 1, size):
+            if nums[i] < nums[min_idx]:
+                min_idx = i
+        nums[step], nums[min_idx] = nums[min_idx], nums[step]
     return nums
-
 
 ########## Merge Sort ##########
 def MergeSort(nums):
-    left = 0
-    right = len(nums) - 1
-    def recMergeSort(nums , left, right):
-        if left < right:
-            mid = left+(right-left)//2
-            recMergeSort(nums, left, mid)
-            recMergeSort(nums, mid + 1, right)
-            Merge(nums, left, mid, right)
-            return nums
-    return recMergeSort(nums, left, right)
+    if len(nums) == 1:
+        return nums
+    mid = len(nums) // 2
+    left = MergeSort(nums[:mid])
+    right = MergeSort(nums[mid:])
+    return Merge(left, right)
 
-def Merge(nums, left, mid, right):
-    n1 = mid - left + 1
-    n2 = right - mid
-    L = [0] * (n1)
-    R = [0] * (n2)
-    for i in range(0, n1):
-        L[i] = nums[left + i]
-    for j in range(0, n2):
-        R[j] = nums[mid + 1 + j]
-    i, j = 0, 0
-    k = left
-    while i < n1 and j < n2:
-        if L[i] <= R[j]:
-            nums[k] = L[i]
+def Merge(left, right):
+    output = []
+    i = j = 0
+    while i < len(left) and j < len(right):
+        if left[i] < right[j]:
+            output.append(left[i])
             i += 1
         else:
-            nums[k] = R[j]
+            output.append(right[j])
             j += 1
-        k += 1
-    while i < n1:
-        nums[k] = L[i]
-        i += 1
-        k += 1
-    while j < n2:
-        nums[k] = R[j]
-        j += 1
-        k += 1
+    output.extend(left[i:])
+    output.extend(right[j:])
+    return output
 
 ########## Merge Sort 2 ##########
 # def MergeSort2(nums):
@@ -320,8 +302,8 @@ def runTests(function, numOfTests):
     print(algorithm + " on array of size 10: \n\t" + str(size10))
     results = function(size10)
     print("     -> " + str(results))
-    #sizes = [100, 1000, 10000, 100000]
-    sizes = [5, 10, 25, 50]
+    sizes = [100, 1000, 10000, 100000]
+    #sizes = [5, 10, 25, 50]
     #sizes = [1]
     print("Average run times for " + algorithm + " on arrays of size:")
     for size in sizes:
@@ -331,10 +313,17 @@ def runTests(function, numOfTests):
 ########## Execution ##########
 
 # runtests(Name of Algorithm, Amount of times to be tested)
+
 # runTests(ExchangeSort, 50)
 # runTests(InsertSort, 50)
+
+# Not sorting properly 
 # runTests(BinaryInsertSort, 50)
+
 # runTests(SelectionSort, 50)
-runTests(MergeSort, 50)
+# runTests(MergeSort, 50)
+
+# RecursionError: maximum recursion depth exceeded in comparison
 # runTests(QuickSort, 50)
+
 # runTests(QuickSort2, 50)
