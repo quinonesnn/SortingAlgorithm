@@ -252,10 +252,86 @@ def partition(nums, low, high):
 
 
 ########## Radix Sort ##########
-# class nodetype:
-#     keytype key
-#     nodetype* link
+#https://github.com/alicepham/python-singly-linked-list-sorting-algos/blob/master/A4_Q2_V9.py
+class Node:
+        def __init__(self, data, next=None):
+            self.data = data
+            self.next = next
+        def set_data(self, data):
+            self.data = data
+        def get_data(self):
+            return self.data
+        def set_next(self, next):
+            self.next = next
+        def get_next(self):
+            return self.next
+        def __str__(self):
+            return "chair: " + self.data.name + " || " + str(self.data.personality)
 
+class LinkedList:
+        def __init__(self):
+            self.head = None
+            self.last = None
+            self.length = 0
+
+        def insert(self, num):
+            '''inserts a person to the head of the classroom'''
+            temp = num
+            if self.head == None:
+                '''case 2: classroom is empty'''
+                self.head = temp
+                self.last = temp
+                self.length = 1
+            else:
+                temp.set_next(self.head)
+                self.head = temp
+                self.length += 1
+        
+        def print_list(self):
+            '''prints the list'''
+            a = []
+            current = self.head
+            while current != None:
+                a.append(current.get_data().name + " : " + str(current.get_data().personality))
+                current = current.get_next()
+            print(a)
+            
+        def radix_sort(self):
+            '''radix sort the classroom'''
+            if self.head == None:
+                print("The Classroom is empty!")
+            elif self.head == self.last:
+                print("There is only one person in the classroom")
+            else:
+                len_list = self.get_length()
+                modulus = 10
+                div = 1
+                while True:
+                    new_list = [[],[],[],[],[],[],[],[],[],[]]
+                    current = self.head
+                    while current != None:
+                        current_value = current.get_data().personality
+                        least_digit = current_value % modulus
+                        least_digit /= div
+                        least_digit = int(least_digit)
+                        new_list[least_digit].append(current)
+                        current = current.get_next()
+                        #self.print_list()
+                    modulus = modulus * 10
+                    div = div * 10
+
+                    if len(new_list[0]) == len_list:
+                        print("done")
+                        break
+                    self.head = None
+                    self.last = None #clears the classroom
+                    A = [str(a) for i in new_list for a in i]
+                    print(A)
+                    print(" ")
+                    for x in reversed(new_list):
+                        for y in reversed(x):
+                            self.insert(y.get_data())
+        
 # typedef nodetype* nodepointer
 
 # def RadixSort(masterList, numdigits):
@@ -327,3 +403,14 @@ def runTests(function, numOfTests):
 # runTests(QuickSort, 50)
 
 # runTests(QuickSort2, 50)
+
+linked = LinkedList()
+linked.insert(7)
+linked.insert(6)
+linked.insert(1)
+linked.insert(2)
+linked.insert(5)
+linked.insert(4)
+linked.insert(3)
+
+linked.print_list()
