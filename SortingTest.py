@@ -1,5 +1,7 @@
 from datetime import datetime
 import numpy as np
+import random
+import heapq
 
 ########## Initialization ##########
 array = np.random.randint(10, size=10)
@@ -33,28 +35,31 @@ def InsertSort(nums):
 
 ########## Binary Insert Sort ##########
   
-def BinaryInsertSort(nums):
-    for i in range(1, len(nums)):
-        temp = nums[i]
-        j = BinarySearch(nums, temp, 0, i-1)
-        for k in range(i, j, -1):
-            nums[k] = nums[k-1]
-        nums[j] = temp
-    return nums
+def BinaryInsertSort(array):
+    for i in range(1, len(array)):
+        temp = array[i]
+        pos = BinarySearch(array, temp, 0, i) + 1
+ 
+        for k in range(i, pos, -1):
+            array[k] = array[k - 1]
+ 
+        array[pos] = temp
+    return array
 
-def BinarySearch(nums, val, start, high):
-    if high - start <= 1:
-        if val < nums[start]:
-            return start - 1
+def BinarySearch(array, key, strt, end):
+    if end - strt <= 1:
+        if key < array[strt]:
+            return strt - 1
         else:
-            return start
-    mid = (start + high)//2
-    if nums[mid] <  val:
-        return BinarySearch(nums, val, mid, high)
-    elif nums[mid] > val:
-        return BinarySearch(nums, val, start, mid)
+            return strt
+ 
+    middle = (strt + end)//2
+    if array[middle] < key:
+        return BinarySearch(array, key, middle, end)
+    elif array[middle] > key:
+        return BinarySearch(array, key, strt, middle)
     else:
-        return mid
+        return middle
 
 ########## Selection Sort ##########
 def SelectionSort(nums):
@@ -91,56 +96,95 @@ def Merge(left, right):
     return output
 
 ########## Merge Sort 2 ##########
-# def MergeSort2(nums):
-#     low, mid = 0, 0
-#     high = len(nums)
-#     if low < high:
-#         mid = (low + high) / 2
-#         MergeSort2(low, mid)
-#         MergeSort2(mid + 1, high)
-#         Merge2(low, mid, high)
 
-# def Merge2(low, mid, high):
-#     i, j, k = low, mid + 1, low
-#     while i < mid and j < high:
-#         if num
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ########## Merge Sort 4 (Linked List) ##########
-# def MergeSort4(low, high, mergedlist):
-#     list1, list2, mid = 0,0,0
-#     if low == high:
-#         mergedlist = low
-#         nums[mergedlist].link = 0
-#     else:
-#         mid = (low + high) / 2
-#         MergeSort4(low, mid, list1)
-#         MergeSort4(mid + 1, high, list2)
-#         Merge4(list1, list2, mergedlist)
+class Node:
+    def __init__(self,data):
+        self.data = data
+        self.next = None
 
-# def Merge4(list1, list2, mergedlist):
-#     lastsorted = 0
-#     if nums[list1].key < nums[list2].key:
-#         mergedlist = list1
-#         list1 = nums[list1].link
-#     else:
-#         mergedlist = list2
-#         list2 = nums[list2].link
-#     lastsorted = mergedlist
-#     while list1 != 0 and list2 != 0:
-#         if nums[list1].key < nums[list2].key:
-#             nums[lastsorted].link = list1
-#             lastsorted = list1
-#             list1 = nums[list1].link
-#         else:
-#             nums[lastsorted].link = list2
-#             lastsorted = list2
-#             list2 = nums[list2].link
-#     if list1 == 0:
-#         nums[lastsorted].link = list2
-#     else:
-#         nums[lastsorted].link = list1
+class LinkedList:
+    def __init__(self):
+        self.head = None
 
+    def append(self, new_value):
+        new_node = Node(new_value)     
+        if self.head is None:
+            self.head = new_node
+            return
+        curr_node = self.head
+        while curr_node.next is not None:
+            curr_node = curr_node.next
+        curr_node.next = new_node
+
+    def sortedMerge(self, a, b):
+        result = None
+        if a == None:
+            return b
+        if b == None:
+            return a
+        if a.data <= b.data:
+            result = a
+            result.next = self.sortedMerge(a.next, b)
+        else:
+            result = b
+            result.next = self.sortedMerge(a, b.next)
+        return result
+     
+    def mergeSort(self, h):
+        if h == None or h.next == None:
+            return h
+        middle = self.getMiddle(h)
+        nexttomiddle = middle.next
+
+        middle.next = None
+
+        left = self.mergeSort(h)
+         
+        right = self.mergeSort(nexttomiddle)
+ 
+        sortedlist = self.sortedMerge(left, right)
+        return sortedlist
+     
+    def getMiddle(self, head):
+        if (head == None):
+            return head
+ 
+        slow = head
+        fast = head
+ 
+        while (fast.next != None and
+               fast.next.next != None):
+            slow = slow.next
+            fast = fast.next.next
+             
+        return slow
+         
+def printList(head):
+    if head is None:
+        print(' ')
+        return
+    curr_node = head
+    while curr_node:
+        print(curr_node.data, end = " ")
+        curr_node = curr_node.next
+    print(' ')
 
 ########## Quick Sort ##########
 # Made this function only take the array to make it cleaner with the helper functions
@@ -209,152 +253,106 @@ def partition(nums, low, high):
 
 
 ########## Heap Sort ##########
-# class heap:
-#     arr = []
-#     heapsize = int
+def HeapSort(arr):
+    n = len(arr)
+    for i in range(n//2 - 1, -1, -1):
+        heapify(arr, n, i)
+    for i in range(n-1, 0, -1):
+        arr[i], arr[0] = arr[0], arr[i]  # swap
+        heapify(arr, i, 0)
+    return arr
 
-# def siftdown(heap, idx):
-#     largerchild = 0
-#     siftkey = heap.arr[idx]
-#     parent = idx
-#     spotfound = False
-#     while 2 * parent <= heap.heapsize and not spotfound:
-#         if 2 * parent < heap.heapsize and heap.arr[2 * parent] < heap.arr[2 * parent + 1]:
-#             largerchild = 2 * parent + 1
-#         else:
-#             largerchild = 2 * parent
-#         if siftkey < heap.arr[largerchild]:
-#             heap.arr[parent] = heap.arr[largerchild]
-#             parent = largerchild
-#         else:
-#             spotfound = True
-#     heap.arr[parent] = siftkey
-
-# def root(heap):
-#     keyout = heap.arr[1]
-#     heap.arr[1] = heap.arr[heap.heapsize]
-#     heap.heapsize -= 1
-#     siftdown(heap, 1)
-#     return keyout
-
-# def removekeys(n, heap, arr):
-#     for i in range(n, 0, -1):
-#         arr[i] = root(heap)
-
-# def makeheap(n, heap):
-#     heap.heapsize = n
-#     for i in range(0, n/2, -1):
-#         siftdown(heap, i)
-
-# def HeapSort(n, heap):
-#     makeheap(n, heap)
-#     removekeys(n, heap, heap.arr)
-
-
+def heapify(arr, n, i):
+    largest = i  
+    l = 2 * i + 1
+    r = 2 * i + 2
+    if l < n and arr[largest] < arr[l]:
+        largest = l
+    if r < n and arr[largest] < arr[r]:
+        largest = r
+    if largest != i:
+        arr[i], arr[largest] = arr[largest], arr[i]  # swap
+        heapify(arr, n, largest)
+ 
 ########## Radix Sort ##########
-#https://github.com/alicepham/python-singly-linked-list-sorting-algos/blob/master/A4_Q2_V9.py
-class Node:
-        def __init__(self, data, next=None):
-            self.data = data
-            self.next = next
-        def set_data(self, data):
-            self.data = data
-        def get_data(self):
-            return self.data
-        def set_next(self, next):
-            self.next = next
-        def get_next(self):
-            return self.next
-        def __str__(self):
-            return "chair: " + self.data.name + " || " + str(self.data.personality)
+# class Node:
+#         def __init__(self, data, next=None):
+#             self.data = data
+#             self.next = next
+#         def set_data(self, data):
+#             self.data = data
+#         def get_data(self):
+#             return self.data
+#         def set_next(self, next):
+#             self.next = next
+#         def get_next(self):
+#             return self.next
 
-class LinkedList:
-        def __init__(self):
-            self.head = None
-            self.last = None
-            self.length = 0
+# class LinkedList:
+#         def __init__(self):
+#             self.head = None
+#             self.last = None
+#             self.length = 0
 
-        def insert(self, num):
-            '''inserts a person to the head of the classroom'''
-            temp = num
-            if self.head == None:
-                '''case 2: classroom is empty'''
-                self.head = temp
-                self.last = temp
-                self.length = 1
-            else:
-                temp.set_next(self.head)
-                self.head = temp
-                self.length += 1
+#         def insert(self, num):
+#             temp = Node(num)
+#             if self.head == None:
+#                 self.head = temp
+#                 self.last = temp
+#                 self.length = 1
+#             else:
+#                 temp.set_next(self.head)
+#                 self.head = temp
+#                 self.length += 1
+
+#         def get_length(self):
+#             return self.length
         
-        def print_list(self):
-            '''prints the list'''
-            a = []
-            current = self.head
-            while current != None:
-                a.append(current.get_data().name + " : " + str(current.get_data().personality))
-                current = current.get_next()
-            print(a)
+#         def print_list(self):
+#             output = []
+#             current = self.head
+#             while current != None:
+#                 output.append(current.get_data())
+#                 current = current.get_next()
+#             print(output)
             
-        def radix_sort(self):
-            '''radix sort the classroom'''
-            if self.head == None:
-                print("The Classroom is empty!")
-            elif self.head == self.last:
-                print("There is only one person in the classroom")
-            else:
-                len_list = self.get_length()
-                modulus = 10
-                div = 1
-                while True:
-                    new_list = [[],[],[],[],[],[],[],[],[],[]]
-                    current = self.head
-                    while current != None:
-                        current_value = current.get_data().personality
-                        least_digit = current_value % modulus
-                        least_digit /= div
-                        least_digit = int(least_digit)
-                        new_list[least_digit].append(current)
-                        current = current.get_next()
-                        #self.print_list()
-                    modulus = modulus * 10
-                    div = div * 10
+#         def radix_sort(self):
+#             output = []
+#             if self.head == None:
+#                 return output
+#             elif self.head == self.last:
+#                 return output
+#             else:
+#                 len_list = self.get_length()
+#                 modulus = 10
+#                 div = 1
+#                 while True:
+#                     new_list = [[],[],[],[],[],[],[],[],[],[]]
+#                     current = self.head
+#                     while current != None:
+#                         current_value = current.get_data()
+#                         least_digit = current_value % modulus
+#                         least_digit /= div
+#                         least_digit = int(least_digit)
+#                         new_list[least_digit].append(current)
+#                         current = current.get_next()
+#                     modulus = modulus * 10
+#                     div = div * 10
 
-                    if len(new_list[0]) == len_list:
-                        print("done")
-                        break
-                    self.head = None
-                    self.last = None #clears the classroom
-                    A = [str(a) for i in new_list for a in i]
-                    print(A)
-                    print(" ")
-                    for x in reversed(new_list):
-                        for y in reversed(x):
-                            self.insert(y.get_data())
-        
-# typedef nodetype* nodepointer
-
-# def RadixSort(masterList, numdigits):
-#     for i in range(numdigits):
-#         distribute(masterList, i)
-#         coalesce(masterList)
-
-# def distribute(masterList, idx):
-#     for j in range(9):
-#         list[j] = None
-#     p  = masterList
-#     while p != None:
-#         j = value of the ith digit (from the right) in p -> key
-#         link p to the high of the list[j]
-#         p = p -> link
-
-# def coalesce(masterList):
-#     masterList = None
-#     for j in range(9):
-#         link the nodes in list[j] to the high of the masterList
+#                     if len(new_list[0]) == len_list:
+#                         break
+#                     self.head = None
+#                     self.last = None
+#                     for x in reversed(new_list):
+#                         for y in reversed(x):
+#                             self.insert(y.get_data())
+#                     output = [str(a) for i in new_list for a in i]
+#                     return output
 
 
-########## Helper Functions ##########
+
+
+########## Array Helper Functions ##########
 
 # Logs time in miliseconds before and after the algorithm runs
 def getTime(function, arr):
@@ -378,39 +376,67 @@ def runTests(function, numOfTests):
     print(algorithm + " on array of size 10: \n\t" + str(size10))
     results = function(size10)
     print("     -> " + str(results))
-    sizes = [100, 1000, 10000, 100000]
-    #sizes = [5, 10, 25, 50]
+    #sizes = [100, 1000, 10000, 100000]
+    sizes = [5, 10, 25, 50]
     #sizes = [1]
     print("Average run times for " + algorithm + " on arrays of size:")
     for size in sizes:
         print(" " + str(size) + " -> " + getAvg(function, size, numOfTests) + " seconds")
     print("___________________________________________\n")
 
+
+########## Linked List Helper Functions ##########
+def randomLinked(size):
+    linked = LinkedList()
+    for i in range(size):
+        linked.append(random.randint(0,size))
+    return linked
+
+def getLinkedAvg(numOfTests, arrSize):
+    times = []
+    linked = randomLinked(arrSize)
+    for i in range(numOfTests):
+        start = datetime.now()
+        linked.mergeSort(linked.head)
+        high = datetime.now()
+        time = str(high - start)[5:]
+        times.append(float(time))
+    return '{:f}'.format(np.mean(times))
+
+def runLinkedTests(numOfTests):
+    print("\n___________________________________________")
+    size10 = randomLinked(10)
+    print("MergeSort4 on linked list of size 10: \n\t")
+    printList(size10.head)
+    size10.head = size10.mergeSort(size10.head)
+    printList(size10.head)
+
+    print("Average run times for mergesort on linked list of size:")
+    sizes = [5, 10, 25, 50]
+    for size in sizes:
+        print(" " + str(size) + " -> " + getLinkedAvg(numOfTests, size) + " seconds")
+    print("\n___________________________________________")
+    
 ########## Execution ##########
 
 # runtests(Name of Algorithm, Amount of times to be tested)
 
 # runTests(ExchangeSort, 50)
 # runTests(InsertSort, 50)
-
-# Not sorting properly 
 # runTests(BinaryInsertSort, 50)
-
 # runTests(SelectionSort, 50)
 # runTests(MergeSort, 50)
 
-# RecursionError: maximum recursion depth exceeded in comparison
+# runTests(MergeSort2, 50)
+
+# runLinkedTests(50)
 # runTests(QuickSort, 50)
 
 # runTests(QuickSort2, 50)
+runTests(HeapSort, 50)
 
-linked = LinkedList()
-linked.insert(7)
-linked.insert(6)
-linked.insert(1)
-linked.insert(2)
-linked.insert(5)
-linked.insert(4)
-linked.insert(3)
 
-linked.print_list()
+# linked.print_list()
+# linked.radix_sort()
+# print("_--------------------------")
+# linked.print_list()
