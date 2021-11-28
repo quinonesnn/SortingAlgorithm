@@ -433,7 +433,8 @@ def runLinkedTests(numOfTests):
 # runTests(QuickSort, 50)
 
 # runTests(QuickSort2, 50)
-runTests(HeapSort, 50)
+
+# runTests(HeapSort, 50)
 
 
 # linked.print_list()
