@@ -275,79 +275,30 @@ def heapify(arr, n, i):
         heapify(arr, n, largest)
  
 ########## Radix Sort ##########
-# class Node:
-#         def __init__(self, data, next=None):
-#             self.data = data
-#             self.next = next
-#         def set_data(self, data):
-#             self.data = data
-#         def get_data(self):
-#             return self.data
-#         def set_next(self, next):
-#             self.next = next
-#         def get_next(self):
-#             return self.next
+def RadixSort(nums):
+    place = 1
+    while max(nums) // place > 0:
+        Counting(nums, place)
+        place *= 10
+    return nums
 
-# class LinkedList:
-#         def __init__(self):
-#             self.head = None
-#             self.last = None
-#             self.length = 0
-
-#         def insert(self, num):
-#             temp = Node(num)
-#             if self.head == None:
-#                 self.head = temp
-#                 self.last = temp
-#                 self.length = 1
-#             else:
-#                 temp.set_next(self.head)
-#                 self.head = temp
-#                 self.length += 1
-
-#         def get_length(self):
-#             return self.length
-        
-#         def print_list(self):
-#             output = []
-#             current = self.head
-#             while current != None:
-#                 output.append(current.get_data())
-#                 current = current.get_next()
-#             print(output)
-            
-#         def radix_sort(self):
-#             output = []
-#             if self.head == None:
-#                 return output
-#             elif self.head == self.last:
-#                 return output
-#             else:
-#                 len_list = self.get_length()
-#                 modulus = 10
-#                 div = 1
-#                 while True:
-#                     new_list = [[],[],[],[],[],[],[],[],[],[]]
-#                     current = self.head
-#                     while current != None:
-#                         current_value = current.get_data()
-#                         least_digit = current_value % modulus
-#                         least_digit /= div
-#                         least_digit = int(least_digit)
-#                         new_list[least_digit].append(current)
-#                         current = current.get_next()
-#                     modulus = modulus * 10
-#                     div = div * 10
-
-#                     if len(new_list[0]) == len_list:
-#                         break
-#                     self.head = None
-#                     self.last = None
-#                     for x in reversed(new_list):
-#                         for y in reversed(x):
-#                             self.insert(y.get_data())
-#                     output = [str(a) for i in new_list for a in i]
-#                     return output
+def Counting(nums, place):
+    size = len(nums)
+    output = [0] * size
+    count = [0] * 10
+    for i in range(0, size):
+        idx = nums[i] // place
+        count[idx % 10] += 1
+    for i in range(1, 10):
+        count[i] += count[i - 1]
+    i = size - 1
+    while i >= 0:
+        idx = nums[i] // place
+        output[count[idx % 10] - 1] = nums[i]
+        count[idx % 10] -= 1
+        i -= 1
+    for i in range(0, size):
+        nums[i] = output[i]
 
 
 
@@ -376,8 +327,8 @@ def runTests(function, numOfTests):
     print(algorithm + " on array of size 10: \n\t" + str(size10))
     results = function(size10)
     print("     -> " + str(results))
-    #sizes = [100, 1000, 10000, 100000]
-    sizes = [5, 10, 25, 50]
+    sizes = [100, 1000, 10000, 100000]
+    #sizes = [5, 10, 25, 50]
     #sizes = [1]
     print("Average run times for " + algorithm + " on arrays of size:")
     for size in sizes:
@@ -436,8 +387,4 @@ def runLinkedTests(numOfTests):
 
 # runTests(HeapSort, 50)
 
-
-# linked.print_list()
-# linked.radix_sort()
-# print("_--------------------------")
-# linked.print_list()
+runTests(RadixSort, 50)
